@@ -1,8 +1,8 @@
 /**********************************************************************************
 *
-*    Copyright (c) 2017-2019 MuK IT GmbH.
+*    Copyright (c) 2017-today MuK IT GmbH.
 *
-*    This file is part of MuK Backend Theme 
+*    This file is part of MuK Grid Snippets
 *    (see https://mukit.at).
 *
 *    This program is free software: you can redistribute it and/or modify
@@ -20,30 +20,22 @@
 *
 **********************************************************************************/
 
-odoo.define('muk_web_theme.Pager', function (require) {
+odoo.define('muk_web_theme.KanbanColumn', function (require) {
 "use strict";
 
-var core = require('web.core');
-var config = require("web.config");
+const config = require('web.config');
 
-var Pager = require('web.Pager');
+const KanbanColumn = require('web.KanbanColumn');
 
-var _t = core._t;
-var QWeb = core.qweb;
+if (!config.device.isMobile) {
+    return;
+}
 
-Pager.include({
-    _render: function () {
-    	this._super.apply(this, arguments);
-        if (this.state.size !== 0 && config.device.isMobile) {
-            this.$value.html(Math.ceil(this.state.current_max / this.state.limit));
-            this.$limit.html(Math.ceil(this.state.size / this.state.limit));
-        }
-    },
-    _onEdit: function (event) {
-        if (!config.device.isMobile) {
-        	this._super.apply(this, arguments);
-        }
-        event.stopPropagation();
+KanbanColumn.include({
+    init() {
+        this._super(...arguments);
+        this.recordsDraggable = false;
+        this.canBeFolded = false;
     },
 });
 

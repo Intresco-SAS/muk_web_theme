@@ -1,8 +1,8 @@
 /**********************************************************************************
 *
-*    Copyright (c) 2017-2019 MuK IT GmbH.
+*    Copyright (c) 2017-today MuK IT GmbH.
 *
-*    This file is part of MuK Backend Theme 
+*    This file is part of MuK Grid Snippets
 *    (see https://mukit.at).
 *
 *    This program is free software: you can redistribute it and/or modify
@@ -23,20 +23,14 @@
 odoo.define('muk_web_theme.ActionManager', function (require) {
 "use strict";
 
-var core = require('web.core');
-var config = require("web.config");
-
-var ActionManager = require('web.ActionManager');
-
-var _t = core._t;
-var QWeb = core.qweb;
+const ActionManager = require('web.ActionManager');
 
 ActionManager.include({
-	_handleAction: function (action) {
-        return this._super.apply(this, arguments).always($.proxy(this, '_hideMenusByAction', action));
+    _handleAction(action) {
+        return this._super(...arguments).then($.proxy(this, '_hideMenusByAction', action));
     },
-    _hideMenusByAction: function (action) {
-        var unique_selection = '[data-action-id=' + action.id + ']';
+    _hideMenusByAction(action) {
+        const unique_selection = '[data-action-id=' + action.id + ']';
         $(_.str.sprintf('.o_menu_apps .dropdown:has(.dropdown-menu.show:has(%s)) > a', unique_selection)).dropdown('toggle');
         $(_.str.sprintf('.o_menu_sections.show:has(%s)', unique_selection)).collapse('hide');
     },
