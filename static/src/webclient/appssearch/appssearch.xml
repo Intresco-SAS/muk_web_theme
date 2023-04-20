@@ -42,17 +42,40 @@
 
 -->
 
-<odoo>
-	
-    <record id="res_users_preferences" model="ir.ui.view">
-        <field name="name">res.users.preferences</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-        <field name="arch" type="xml">
-             <xpath expr="//field[@name='tz_offset']" position="after">
-                <field name="sidebar_type" readonly="0"/>
-            </xpath>
-        </field>
-    </record>
+<templates xml:space="preserve">
 
-</odoo>
+	<t t-name="muk_web_theme.AppsSearch" owl="1">
+		<div
+            class="mk_apps_search_container"
+            t-att-class="state.hasResults ? 'mk_apps_search_active' : ''"
+        >
+            <div class="mk_apps_search_input d-flex align-items-center">
+                <span class="mk_apps_search_icon fa fa-search" />
+                <input
+                    type="search"
+                    autocomplete="off"
+                    class="form-control"
+                    placeholder="Search menus..."
+                    data-allow-hotkeys="true"
+                    t-on-input="_onInput"
+                    t-on-keydown="_onKeyDown"
+                    t-ref="autofocus"
+                />
+            </div>
+            <div t-if="state.hasResults" class="mk_apps_search_menus">
+				<t t-foreach="state.results" t-as="menu" t-key="menu.id">
+					<a
+						t-att-style="menu.style ? menu.style : ''"
+	            		t-att-href="menu.href"
+            			t-att-data-menu-id="menu.id" 
+            			t-att-data-menu-xmlid="menu.xmlid" 
+            			t-att-data-action-id="menu.actionID"
+						t-on-click.prevent="() => menu.action()"
+						t-out="menu.name"
+            		/>
+                </t>
+            </div>
+        </div>
+	</t>
+	
+</templates>
